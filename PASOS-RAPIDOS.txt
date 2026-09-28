@@ -1,0 +1,21 @@
+PFMEA FLOW v0.4.1 - PUBLICACION EN GITHUB PAGES
+
+1. En GitHub, crear un repositorio llamado: pfmea-flow
+2. Subir TODO el contenido de esta carpeta a la rama main.
+   Importante: .github es una carpeta oculta y debe subirse tambien.
+3. Ir a Settings > Pages.
+4. En Source / Build and deployment, elegir: GitHub Actions.
+5. Ir a Actions y esperar que termine: Deploy PFMEA Flow to GitHub Pages.
+6. Abrir: https://TU-USUARIO.github.io/pfmea-flow/
+7. En Settings > Pages, activar Enforce HTTPS cuando este disponible.
+
+Para el usuario f4d30u7, la URL esperada es:
+https://f4d30u7.github.io/pfmea-flow/
+
+ANTES DE USAR PROYECTOS REALES
+- Usar siempre la misma URL y el mismo perfil de navegador.
+- No usar modo incognito.
+- Exportar una copia .pfmea.json al finalizar cada sesion importante.
+- Guardar las copias en OneDrive/SharePoint o repositorio aprobado.
+- No subir archivos .pfmea.json, Excel o PDF al repositorio de GitHub.
+- Antes de renombrar el repositorio o cambiar el dominio, exportar todos los proyectos.

@@ -1,0 +1,6 @@
+{
+  "appVersion": "0.4.1-github-pages",
+  "schemaVersion": "0.4.0",
+  "deployment": "static-github-pages",
+  "containsRealProjectData": false
+}

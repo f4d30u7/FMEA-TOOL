@@ -1,0 +1,1737 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/pfmea-flow/schemas/pfmea-project-0.4.0.json",
+  "title": "PFMEA Flow Project v0.4",
+  "description": "Contrato estructural tolerante a borradores para PFMEA Flow v0.4 Local-first. La completitud metodologica se evalua por hitos mediante pfmea-completion-rules.json, no convirtiendo cada campo posible en obligatorio dentro del JSON Schema.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "appVersion",
+    "id",
+    "metadata",
+    "scope",
+    "team",
+    "references",
+    "methodology",
+    "processMap",
+    "functions",
+    "failureModes",
+    "effects",
+    "causes",
+    "controls",
+    "controlLinks",
+    "reactionPlans",
+    "risks",
+    "actions",
+    "revisionHistory",
+    "exportHistory",
+    "workflow"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "0.4.0"
+    },
+    "appVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "metadata": {
+      "$ref": "#/$defs/projectMetadata"
+    },
+    "scope": {
+      "$ref": "#/$defs/projectScope"
+    },
+    "team": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/teamMember"
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/documentReference"
+      }
+    },
+    "methodology": {
+      "$ref": "#/$defs/riskMethodology"
+    },
+    "processMap": {
+      "$ref": "#/$defs/processMap"
+    },
+    "functions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/processFunction"
+      }
+    },
+    "failureModes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/failureMode"
+      }
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/failureEffect"
+      }
+    },
+    "causes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/failureCause"
+      }
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/control"
+      }
+    },
+    "controlLinks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/controlLink"
+      }
+    },
+    "reactionPlans": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/reactionPlan"
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/riskEvaluation"
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/riskAction"
+      }
+    },
+    "revisionHistory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/revisionRecord"
+      }
+    },
+    "exportHistory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/exportRecord"
+      }
+    },
+    "workflow": {
+      "$ref": "#/$defs/projectWorkflow"
+    },
+    "clientState": {
+      "$ref": "#/$defs/clientState"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^$|^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "dateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "nullableDateTime": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/dateTime"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "idArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "projectStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in-review",
+        "final",
+        "archived",
+        "replaced"
+      ]
+    },
+    "workflowStatus": {
+      "type": "string",
+      "enum": [
+        "not-started",
+        "in-progress",
+        "complete",
+        "review-required",
+        "error",
+        "not-applicable"
+      ]
+    },
+    "rating": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rpn": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "projectMetadata": {
+      "type": "object",
+      "required": [
+        "name",
+        "status",
+        "processName",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/projectStatus"
+        },
+        "processName": {
+          "type": "string"
+        },
+        "productFamily": {
+          "type": "string"
+        },
+        "site": {
+          "type": "string"
+        },
+        "areaLine": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "customer": {
+          "type": "string"
+        },
+        "projectReference": {
+          "type": "string"
+        },
+        "changeNumber": {
+          "type": "string"
+        },
+        "startDate": {
+          "$ref": "#/$defs/date"
+        },
+        "targetDate": {
+          "$ref": "#/$defs/date"
+        },
+        "createdAt": {
+          "$ref": "#/$defs/dateTime"
+        },
+        "updatedAt": {
+          "$ref": "#/$defs/dateTime"
+        },
+        "lastExternalBackupAt": {
+          "$ref": "#/$defs/nullableDateTime"
+        },
+        "lastExportAt": {
+          "$ref": "#/$defs/nullableDateTime"
+        },
+        "sourceProjectId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "previousRevisionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "summaryOfChanges": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "standard+advanced"
+    },
+    "projectScope": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "objective": {
+          "type": "string"
+        },
+        "processStart": {
+          "type": "string"
+        },
+        "processEnd": {
+          "type": "string"
+        },
+        "includedProducts": {
+          "type": "string"
+        },
+        "exclusions": {
+          "type": "string"
+        },
+        "assumptions": {
+          "type": "string"
+        },
+        "interfaces": {
+          "type": "string"
+        },
+        "externalProcesses": {
+          "type": "string"
+        },
+        "constraints": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "standard+advanced"
+    },
+    "teamMember": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "area": {
+          "type": "string"
+        },
+        "specialty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "documentReference": {
+      "type": "object",
+      "required": [
+        "id",
+        "title"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "code": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "riskMethodology": {
+      "type": "object",
+      "required": [
+        "method",
+        "scaleRange",
+        "scales",
+        "thresholds"
+      ],
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "scaleRange": {
+          "type": "object",
+          "required": [
+            "min",
+            "max"
+          ],
+          "properties": {
+            "min": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max": {
+              "type": "integer",
+              "maximum": 10
+            }
+          },
+          "additionalProperties": false
+        },
+        "scales": {
+          "type": "object",
+          "required": [
+            "severity",
+            "occurrence",
+            "detection"
+          ],
+          "properties": {
+            "severity": {
+              "$ref": "#/$defs/ratingScale"
+            },
+            "occurrence": {
+              "$ref": "#/$defs/ratingScale"
+            },
+            "detection": {
+              "$ref": "#/$defs/ratingScale"
+            }
+          },
+          "additionalProperties": false
+        },
+        "thresholds": {
+          "$ref": "#/$defs/riskThresholds"
+        },
+        "specialCharacteristics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/specialCharacteristic"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ratingScale": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "values"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "values": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": {
+            "$ref": "#/$defs/ratingCriterion"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ratingCriterion": {
+      "type": "object",
+      "required": [
+        "score",
+        "title",
+        "description"
+      ],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "examples": {
+          "$ref": "#/$defs/stringArray"
+        }
+      },
+      "additionalProperties": false
+    },
+    "riskThresholds": {
+      "type": "object",
+      "required": [
+        "criticalSeverity",
+        "reviewRpn",
+        "actionRpn",
+        "weakDetection",
+        "highOccurrence"
+      ],
+      "properties": {
+        "criticalSeverity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "reviewRpn": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "actionRpn": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "weakDetection": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "highOccurrence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      },
+      "additionalProperties": false
+    },
+    "specialCharacteristic": {
+      "type": "object",
+      "required": [
+        "id",
+        "code",
+        "label"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "code": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "processMap": {
+      "type": "object",
+      "required": [
+        "nodes",
+        "edges"
+      ],
+      "properties": {
+        "confirmedAt": {
+          "$ref": "#/$defs/nullableDateTime"
+        },
+        "confirmedBy": {
+          "type": "string"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/processNode"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/processEdge"
+          }
+        },
+        "validationAcknowledgements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/validationAcknowledgement"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "processNode": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "type",
+        "position",
+        "archived"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "start",
+            "end",
+            "operation",
+            "inspection",
+            "decision",
+            "transport",
+            "storage",
+            "wait",
+            "external",
+            "rework",
+            "subprocess"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "area": {
+          "type": "string"
+        },
+        "station": {
+          "type": "string"
+        },
+        "inputs": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "outputs": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "equipment": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "materials": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "parameters": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "responsible": {
+          "type": "string"
+        },
+        "analysisOrder": {
+          "type": "number"
+        },
+        "position": {
+          "$ref": "#/$defs/point"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "archived"
+          ]
+        },
+        "archived": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "standard+advanced"
+    },
+    "point": {
+      "type": "object",
+      "required": [
+        "x",
+        "y"
+      ],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "processEdge": {
+      "type": "object",
+      "required": [
+        "id",
+        "sourceNodeId",
+        "targetNodeId",
+        "flowType",
+        "archived"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceNodeId": {
+          "$ref": "#/$defs/id"
+        },
+        "targetNodeId": {
+          "$ref": "#/$defs/id"
+        },
+        "flowType": {
+          "type": "string",
+          "enum": [
+            "normal",
+            "alternative",
+            "reject",
+            "rework",
+            "exception",
+            "return",
+            "parallel"
+          ]
+        },
+        "condition": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "archived": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "validationAcknowledgement": {
+      "type": "object",
+      "required": [
+        "id",
+        "issueCode",
+        "reason",
+        "acknowledgedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "issueCode": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "responsible": {
+          "type": "string"
+        },
+        "acknowledgedAt": {
+          "$ref": "#/$defs/dateTime"
+        }
+      },
+      "additionalProperties": false
+    },
+    "processFunction": {
+      "type": "object",
+      "required": [
+        "id",
+        "stageId",
+        "description",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "stageId": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "type": "string"
+        },
+        "requirement": {
+          "type": "string"
+        },
+        "specification": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "tolerance": {
+          "type": "string"
+        },
+        "inputs": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "outputs": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "customer": {
+          "type": "string"
+        },
+        "specialCharacteristicIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "referenceIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "archived"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "standard+advanced"
+    },
+    "failureMode": {
+      "type": "object",
+      "required": [
+        "id",
+        "functionId",
+        "description",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "functionId": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "archived",
+            "not-applicable"
+          ]
+        },
+        "dispositionReason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "standard+advanced"
+    },
+    "failureEffect": {
+      "type": "object",
+      "required": [
+        "id",
+        "failureModeId",
+        "description",
+        "severity",
+        "active"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "failureModeId": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "affectedParty": {
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/rating"
+        },
+        "severityRationale": {
+          "type": "string"
+        },
+        "classification": {
+          "type": "string"
+        },
+        "specialCharacteristicIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "referenceIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "standard+advanced"
+    },
+    "failureCause": {
+      "type": "object",
+      "required": [
+        "id",
+        "failureModeId",
+        "description",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "failureModeId": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "mechanism": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "dataSource": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "archived",
+            "not-applicable"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        },
+        "controlAbsence": {
+          "type": "object",
+          "required": [
+            "preventiveConfirmed",
+            "detectionConfirmed"
+          ],
+          "properties": {
+            "preventiveConfirmed": {
+              "type": "boolean"
+            },
+            "detectionConfirmed": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "standard+advanced"
+    },
+    "control": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "description",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "code": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "preventive",
+            "detection"
+          ]
+        },
+        "subtype": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "current",
+            "proposed",
+            "retired"
+          ]
+        },
+        "method": {
+          "type": "string"
+        },
+        "frequency": {
+          "type": "string"
+        },
+        "sampleSize": {
+          "type": "string"
+        },
+        "acceptanceCriteria": {
+          "type": "string"
+        },
+        "responsible": {
+          "type": "string"
+        },
+        "record": {
+          "type": "string"
+        },
+        "automatic": {
+          "type": "boolean"
+        },
+        "automaticReject": {
+          "type": "boolean"
+        },
+        "alarm": {
+          "type": "boolean"
+        },
+        "interlock": {
+          "type": "boolean"
+        },
+        "validated": {
+          "type": "boolean"
+        },
+        "challengeTestRequired": {
+          "type": "boolean"
+        },
+        "challengeTestCompleted": {
+          "type": "boolean"
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "referenceIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "standard+advanced"
+    },
+    "controlLink": {
+      "type": "object",
+      "required": [
+        "id",
+        "controlId",
+        "causeId",
+        "relationship"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "controlId": {
+          "$ref": "#/$defs/id"
+        },
+        "causeId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failureModeId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stageId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "relationship": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "reactionPlan": {
+      "type": "object",
+      "required": [
+        "id",
+        "linkedCauseIds"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "code": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "string"
+        },
+        "immediateAction": {
+          "type": "string"
+        },
+        "stopLine": {
+          "type": "boolean"
+        },
+        "segregationRequired": {
+          "type": "boolean"
+        },
+        "segregationScope": {
+          "type": "string"
+        },
+        "cutoffPoint": {
+          "type": "string"
+        },
+        "additionalInspection": {
+          "type": "string"
+        },
+        "adjustmentCorrection": {
+          "type": "string"
+        },
+        "materialDisposition": {
+          "type": "string"
+        },
+        "restartCriteria": {
+          "type": "string"
+        },
+        "responsible": {
+          "type": "string"
+        },
+        "escalation": {
+          "type": "string"
+        },
+        "record": {
+          "type": "string"
+        },
+        "notification": {
+          "type": "string"
+        },
+        "linkedControlIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "linkedCauseIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "conditional"
+    },
+    "riskRating": {
+      "type": "object",
+      "required": [
+        "severity",
+        "occurrence",
+        "detection",
+        "rpn"
+      ],
+      "properties": {
+        "severity": {
+          "$ref": "#/$defs/rating"
+        },
+        "occurrence": {
+          "$ref": "#/$defs/rating"
+        },
+        "detection": {
+          "$ref": "#/$defs/rating"
+        },
+        "rpn": {
+          "$ref": "#/$defs/rpn"
+        },
+        "severityRationale": {
+          "type": "string"
+        },
+        "occurrenceRationale": {
+          "type": "string"
+        },
+        "detectionRationale": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Contenedor de puntajes. En borrador los valores pueden ser null; los hitos de completitud exigen 1 a 10."
+    },
+    "projectedRiskRating": {
+      "type": "object",
+      "required": [
+        "severity",
+        "occurrence",
+        "detection",
+        "rpn"
+      ],
+      "properties": {
+        "severity": {
+          "$ref": "#/$defs/rating"
+        },
+        "occurrence": {
+          "$ref": "#/$defs/rating"
+        },
+        "detection": {
+          "$ref": "#/$defs/rating"
+        },
+        "rpn": {
+          "$ref": "#/$defs/rpn"
+        },
+        "rationale": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true,
+      "description": "Contenedor de puntajes. En borrador los valores pueden ser null; los hitos de completitud exigen 1 a 10."
+    },
+    "riskEvaluation": {
+      "type": "object",
+      "required": [
+        "id",
+        "causeId",
+        "current",
+        "decision",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "code": {
+          "type": "string"
+        },
+        "causeId": {
+          "$ref": "#/$defs/id"
+        },
+        "governingEffectId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "current": {
+          "$ref": "#/$defs/riskRating"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "requires-action",
+            "accepted-currently",
+            "accepted-with-justification",
+            "accepted-temporarily",
+            "closed-after-action",
+            "not-applicable"
+          ]
+        },
+        "acceptanceJustification": {
+          "type": "string"
+        },
+        "target": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/projectedRiskRating"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "residual": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/projectedRiskRating"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actionIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "evaluated",
+            "action-open",
+            "closed",
+            "archived"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "riskAction": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "linkedRiskIds",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "code": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "linkedRiskIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "responsible": {
+          "type": "string"
+        },
+        "area": {
+          "type": "string"
+        },
+        "targetDate": {
+          "$ref": "#/$defs/date"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "proposed",
+            "accepted",
+            "in-progress",
+            "implemented",
+            "pending-verification",
+            "effectiveness-verified",
+            "cancelled",
+            "replaced"
+          ]
+        },
+        "implementedDate": {
+          "$ref": "#/$defs/date"
+        },
+        "evidence": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "result": {
+          "type": "string"
+        },
+        "effectiveness": {
+          "$ref": "#/$defs/effectiveness"
+        },
+        "affects": {
+          "type": "object",
+          "required": [
+            "severity",
+            "occurrence",
+            "detection"
+          ],
+          "properties": {
+            "severity": {
+              "type": "boolean"
+            },
+            "occurrence": {
+              "type": "boolean"
+            },
+            "detection": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "createdControlIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "modifiedControlIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "x-ui-profile": "conditional+advanced"
+    },
+    "effectiveness": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "not-started",
+            "pending-verification",
+            "effectiveness-verified"
+          ]
+        },
+        "result": {
+          "type": "string"
+        },
+        "verifiedBy": {
+          "type": "string"
+        },
+        "verifiedAt": {
+          "$ref": "#/$defs/nullableDateTime"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "revisionRecord": {
+      "type": "object",
+      "required": [
+        "id",
+        "revision",
+        "date",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "date": {
+          "$ref": "#/$defs/date"
+        },
+        "description": {
+          "type": "string"
+        },
+        "responsible": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/projectStatus"
+        },
+        "sourceProjectId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "exportRecord": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "generatedAt"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "type": "string"
+        },
+        "generatedAt": {
+          "$ref": "#/$defs/dateTime"
+        },
+        "projectStatus": {
+          "$ref": "#/$defs/projectStatus"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "projectWorkflow": {
+      "type": "object",
+      "required": [
+        "sectionStatus",
+        "stageStatus"
+      ],
+      "properties": {
+        "sectionStatus": {
+          "type": "object",
+          "required": [
+            "setup",
+            "map",
+            "analysis",
+            "actions",
+            "review",
+            "export"
+          ],
+          "properties": {
+            "setup": {
+              "$ref": "#/$defs/workflowStatus"
+            },
+            "map": {
+              "$ref": "#/$defs/workflowStatus"
+            },
+            "analysis": {
+              "$ref": "#/$defs/workflowStatus"
+            },
+            "actions": {
+              "$ref": "#/$defs/workflowStatus"
+            },
+            "review": {
+              "$ref": "#/$defs/workflowStatus"
+            },
+            "export": {
+              "$ref": "#/$defs/workflowStatus"
+            }
+          },
+          "additionalProperties": false
+        },
+        "stageStatus": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/workflowStatus"
+          }
+        },
+        "reviewRequiredStageIds": {
+          "$ref": "#/$defs/idArray"
+        },
+        "closure": {
+          "type": "object",
+          "required": [
+            "comment",
+            "exceptions",
+            "confirmedBy",
+            "confirmedAt"
+          ],
+          "properties": {
+            "comment": {
+              "type": "string"
+            },
+            "exceptions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/closureException"
+              }
+            },
+            "confirmedBy": {
+              "type": "string"
+            },
+            "confirmedAt": {
+              "$ref": "#/$defs/nullableDateTime"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "closureException": {
+      "type": "object",
+      "required": [
+        "id",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "description": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "responsible": {
+          "type": "string"
+        },
+        "targetDate": {
+          "$ref": "#/$defs/date"
+        }
+      },
+      "additionalProperties": false
+    },
+    "clientState": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "lastRoute": {
+          "type": "string"
+        },
+        "selectedMapNodeId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedFunctionId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedFailureModeId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedCauseId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "selectedRiskId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "setupTab": {
+          "type": "string",
+          "enum": [
+            "identification",
+            "scope",
+            "team",
+            "references",
+            "scales"
+          ]
+        },
+        "analysisTab": {
+          "type": "string",
+          "enum": [
+            "chain",
+            "functions",
+            "failures",
+            "effects-causes",
+            "controls",
+            "evaluation"
+          ]
+        },
+        "libraryFilter": {
+          "type": "string"
+        },
+        "showAdvancedFields": {
+          "type": "boolean",
+          "description": "Muestra u oculta datos tecnicos avanzados en la interfaz."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$comment": "Schema estructural. Ver pfmea-completion-rules.json para reglas de working, complete-stage, in-review y final."
+}

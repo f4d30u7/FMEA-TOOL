@@ -1,0 +1,150 @@
+{
+  "rulesVersion": "0.4.0",
+  "schemaVersion": "0.4.0",
+  "title": "PFMEA Flow - reglas de completitud Lean UX",
+  "principles": [
+    "El modelo puede almacenar mas detalle del que la interfaz muestra por defecto.",
+    "Guardar un borrador nunca exige completar metodologicamente el PFMEA.",
+    "La obligatoriedad depende del hito y del contexto, no de una lista universal de campos.",
+    "Los datos avanzados permanecen disponibles sin interrumpir el camino esencial.",
+    "Una ausencia de control debe confirmarse expresamente antes de cerrar una etapa."
+  ],
+  "gates": {
+    "working": {
+      "label": "Trabajando en borrador",
+      "blocking": false,
+      "required": [
+        "project.metadata.name",
+        "project.metadata.processName"
+      ],
+      "behavior": "Los elementos incompletos generan advertencias suaves. Se permite guardar, navegar, importar y exportar como borrador."
+    },
+    "complete-stage": {
+      "label": "Marcar etapa completa",
+      "blocking": true,
+      "required": [
+        "stage.functionOrExpectedResult",
+        "function.atLeastOneActiveFailureMode",
+        "failureMode.atLeastOneActiveEffect",
+        "effect.severityBetween1And10",
+        "failureMode.atLeastOneActiveCause",
+        "cause.riskEvaluation",
+        "risk.current.severityBetween1And10",
+        "risk.current.occurrenceBetween1And10",
+        "risk.current.detectionBetween1And10",
+        "cause.preventiveControlOrExplicitAbsence",
+        "cause.detectionControlOrExplicitAbsence",
+        "risk.decisionNotPending"
+      ],
+      "notRequired": [
+        "function.requirementSeparatedFromDescription",
+        "effect.severityRationaleUnlessCriticalOrException",
+        "cause.category",
+        "reactionPlanUnlessTriggeredByRiskRule",
+        "actionUnlessRiskDecisionRequiresAction"
+      ]
+    },
+    "in-review": {
+      "label": "Enviar proyecto a revision",
+      "blocking": true,
+      "required": [
+        "project.metadata.name",
+        "project.metadata.code",
+        "project.metadata.revision",
+        "project.metadata.processName",
+        "project.scope.processStart",
+        "project.scope.processEnd",
+        "project.processMap.confirmedAt",
+        "allActiveStages.completeOrNotApplicable",
+        "allCompletedStages.passCompleteStageGate",
+        "riskRequiringAction.hasLinkedAction",
+        "requiredAction.responsible",
+        "requiredAction.targetDate"
+      ],
+      "warnings": [
+        "project.metadata.owner",
+        "project.scope.objective",
+        "project.team",
+        "acceptedRisk.justification",
+        "criticalSeverity",
+        "overdueAction",
+        "implementedActionWithoutEffectivenessVerification"
+      ]
+    },
+    "final": {
+      "label": "Cerrar revision",
+      "blocking": true,
+      "inherits": "in-review",
+      "additionalRequired": [
+        "project.metadata.owner",
+        "acceptedWithJustification.acceptanceJustification",
+        "acceptedTemporarily.acceptanceJustification",
+        "acceptedCriticalSeverity.acceptanceJustification"
+      ],
+      "notBlocking": [
+        "openActionWithOwnerAndTargetDate",
+        "warningAcknowledgedByTeam",
+        "targetRpnNotYetVerified"
+      ]
+    }
+  },
+  "fieldProfiles": {
+    "project": {
+      "standard": ["name", "processName", "productFamily", "scope.processStart", "scope.processEnd", "owner"],
+      "conditional": ["code", "revision", "owner"],
+      "advanced": ["site", "areaLine", "dates", "customer", "projectReference", "changeNumber", "interfaces", "externalProcesses", "constraints"]
+    },
+    "processNode": {
+      "standard": ["name", "type"],
+      "generated": ["code", "analysisOrder", "position"],
+      "advanced": ["description", "area", "station", "inputs", "outputs", "equipment", "materials", "parameters", "responsible"]
+    },
+    "function": {
+      "standard": ["description"],
+      "prompt": "Que debe lograr esta etapa y con que criterio?",
+      "advanced": ["requirement", "specification", "unit", "tolerance", "inputs", "outputs", "customer", "specialCharacteristicIds", "referenceIds"]
+    },
+    "failureMode": {
+      "standard": ["description"],
+      "advanced": ["category", "source", "dispositionReason"]
+    },
+    "effect": {
+      "standard": ["description", "severity"],
+      "conditional": ["severityRationale"],
+      "advanced": ["level", "affectedParty", "classification", "specialCharacteristicIds", "referenceIds"]
+    },
+    "cause": {
+      "standard": ["description"],
+      "conditional": ["controlAbsence"],
+      "advanced": ["category", "mechanism", "trigger", "evidence", "dataSource", "notes"]
+    },
+    "control": {
+      "standard": ["type", "description"],
+      "advanced": ["subtype", "method", "frequency", "sampleSize", "acceptanceCriteria", "responsible", "record", "automatic", "automaticReject", "alarm", "interlock", "validated", "challengeTestRequired", "challengeTestCompleted", "evidence", "referenceIds", "notes"]
+    },
+    "reactionPlan": {
+      "standard": ["trigger", "immediateAction"],
+      "conditional": true,
+      "advanced": ["stopLine", "segregationRequired", "segregationScope", "cutoffPoint", "additionalInspection", "adjustmentCorrection", "materialDisposition", "restartCriteria", "responsible", "escalation", "record", "notification"]
+    },
+    "risk": {
+      "standard": ["current.severity", "current.occurrence", "current.detection", "decision"],
+      "generated": ["current.rpn"],
+      "conditional": ["acceptanceJustification", "target", "residual"],
+      "advanced": ["ratingRationales", "notes"]
+    },
+    "action": {
+      "standard": ["description", "responsible", "targetDate"],
+      "conditional": true,
+      "advanced": ["type", "area", "priority", "implementedDate", "evidence", "result", "effectiveness", "affects", "createdControlIds", "modifiedControlIds", "notes"]
+    }
+  },
+  "severityRules": {
+    "workingMissing": "warning",
+    "completeStageMissing": "error",
+    "inReviewMissing": "error",
+    "finalExceptionWithoutJustification": "error",
+    "methodologicalConcern": "warning",
+    "optionalDetailMissing": "none"
+  }
+}
