@@ -1,0 +1,16 @@
+# Project exports and local working files
+*.pfmea.json
+*.xlsx
+*.xls
+*.csv
+*.pdf
+exports/
+backups/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+node_modules/
